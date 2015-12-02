@@ -18,6 +18,12 @@ The plugin's folder should be named "translate"
 
 Changelog
 =================
+###0.3.5###
+- Added the feature to sort the translations by the original or translated message
+- Adjusted for Craft 2.5
+
+Warning! This version is updated for Craft 2.5 and does NOT work correctly on Craft 2.4
+
 ###0.3.4###
 - Added support for finding translatable strings in object notation
 - Added a MIT license
