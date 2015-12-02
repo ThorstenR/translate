@@ -66,8 +66,12 @@ class TranslateElementType extends BaseElementType
     public function defineTableAttributes($source = null)
     {
         return array(
-            'original' => Craft::t('Original'),
-            'field'    => Craft::t('Translation'),
+            array(
+                'original', array('label' => Craft::t('Original')),
+            ),
+            array(
+                'field', array('label' => Craft::t('Translation')),
+            ),
         );
     }
 
