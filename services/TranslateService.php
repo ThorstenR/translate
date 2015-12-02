@@ -104,10 +104,11 @@ class TranslateService extends BaseApplicationComponent
      * Get translations by criteria.
      *
      * @param ElementCriteriaModel $criteria
+     * @param array                $viewState
      *
      * @return array
      */
-    public function get(ElementCriteriaModel $criteria)
+    public function get(ElementCriteriaModel $criteria, $viewState)
     {
         // Ensure source is an array
         if (!is_array($criteria->source)) {
@@ -136,7 +137,7 @@ class TranslateService extends BaseApplicationComponent
                 foreach ($files as $file) {
 
                     // Parse file
-                    $elements = $this->_parseFile($path, $file, $criteria);
+                    $elements = $this->_parseFile($path, $file, $criteria, $viewState);
 
                     // Collect in array
                     $occurences = array_merge($occurences, $elements);
@@ -144,12 +145,21 @@ class TranslateService extends BaseApplicationComponent
             } else {
 
                 // Parse file
-                $elements = $this->_parseFile($path, $path, $criteria);
+                $elements = $this->_parseFile($path, $path, $criteria, $viewState);
 
                 // Collect in array
                 $occurences = array_merge($occurences, $elements);
             }
         }
+
+	    if($viewState['mode'] === 'table') {
+		    if($viewState['sort'] === 'asc') {
+			    ksort($occurences, SORT_NATURAL | SORT_FLAG_CASE);
+		    } else {
+			    krsort($occurences, SORT_NATURAL | SORT_FLAG_CASE);
+		    }
+	    }
+
 
         return $occurences;
     }
@@ -160,10 +170,11 @@ class TranslateService extends BaseApplicationComponent
      * @param string               $path
      * @param string               $file
      * @param ElementCriteriaModel $criteria
+     * @param array                $viewState
      *
      * @return array
      */
-    protected function _parseFile($path, $file, ElementCriteriaModel $criteria)
+    protected function _parseFile($path, $file, ElementCriteriaModel $criteria, $viewState)
     {
         // Collect matches in file
         $occurences = array();
@@ -216,7 +227,11 @@ class TranslateService extends BaseApplicationComponent
                     }
 
                     // Collect in array
-                    $occurences[$original] = $element;
+	                if($viewState['order'] === 'field') {
+		                $occurences[$translation] = $element;
+	                } else {
+		                $occurences[$original] = $element;
+	                }
                 }
             }
         }

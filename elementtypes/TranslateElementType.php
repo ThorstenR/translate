@@ -67,12 +67,36 @@ class TranslateElementType extends BaseElementType
     {
         return array(
             array(
-                'original', array('label' => Craft::t('Original')),
+                'original',
+                array(
+                    'label' => Craft::t('Original')
+                ),
             ),
             array(
-                'field', array('label' => Craft::t('Translation')),
+                'field',
+                array(
+                    'label' => Craft::t('Translation')
+                ),
             ),
         );
+    }
+
+    /**
+     * @inheritDoc IElementType::defineSortableAttributes()
+     *
+     * @retrun array
+     */
+    public function defineSortableAttributes()
+    {
+        $sortableAttributes = array();
+
+        foreach ($this->defineTableAttributes() as $index => $attributeDefinition) {
+            foreach($attributeDefinition as $name => $values) {
+                $sortableAttributes[$attributeDefinition[0]] = $attributeDefinition[1]['label'];
+            }
+        }
+
+        return $sortableAttributes;
     }
 
     /**
@@ -241,7 +265,7 @@ class TranslateElementType extends BaseElementType
             'elementType'         => new ElementTypeVariable($this),
             'disabledElementIds'  => $disabledElementIds,
             'attributes'          => $this->defineTableAttributes($sourceKey),
-            'elements'            => craft()->translate->get($criteria),
+            'elements'            => craft()->translate->get($criteria, $viewState),
             'showCheckboxes'      => $showCheckboxes,
         );
 
