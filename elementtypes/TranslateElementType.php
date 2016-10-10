@@ -64,8 +64,8 @@ class TranslateElementType extends BaseElementType
     public function defineAvailableTableAttributes()
     {
         return array(
-            array('original' => array('label' => Craft::t('Original'))),
-            array('field' => array('label' => Craft::t('Translation'))),
+            'original' => array('label' => Craft::t('Original')),
+            'field' => array('label' => Craft::t('Translation')),
         );
     }
 
@@ -79,24 +79,6 @@ class TranslateElementType extends BaseElementType
     public function getDefaultTableAttributes($source = null)
     {
         return array('original', 'field');
-    }
-
-    /**
-     * @inheritDoc IElementType::defineSortableAttributes()
-     *
-     * @retrun array
-     */
-    public function defineSortableAttributes()
-    {
-        $sortableAttributes = array();
-
-        foreach ($this->defineAvailableTableAttributes() as $index => $attributeDefinition) {
-            foreach($attributeDefinition as $name => $values) {
-                $sortableAttributes[$attributeDefinition[0]] = $attributeDefinition[1]['label'];
-            }
-        }
-
-        return $sortableAttributes;
     }
 
     /**
