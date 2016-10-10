@@ -1,4 +1,4 @@
-Translate plugin for Craft CMS
+Translate plugin for Craft CMS [![Build Status](https://travis-ci.org/boboldehampsink/translate.svg?branch=master)](https://travis-ci.org/boboldehampsink/translate) [![Code Coverage](https://scrutinizer-ci.com/g/boboldehampsink/translate/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/boboldehampsink/translate/?branch=develop) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/boboldehampsink/translate/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/boboldehampsink/translate/?branch=develop)
 =================
 
 Plugin that allows you to translate your website.
@@ -16,8 +16,21 @@ Todo:
 Important:
 The plugin's folder should be named "translate"
 
+Development
+=================
+Run this from your Craft installation to test your changes to this plugin before submitting a Pull Request
+```bash
+phpunit --bootstrap craft/app/tests/bootstrap.php --configuration craft/plugins/translate/phpunit.xml.dist --coverage-text craft/plugins/translate/tests
+```
+
 Changelog
 =================
+###0.4.1###
+- All service code is now fully covered by unit tests
+
+###0.4.0###
+- Added Craft 2.5 compatibility
+
 ###0.3.5###
 - Added the feature to sort the translations by the original or translated message
 - Adjusted for Craft 2.5

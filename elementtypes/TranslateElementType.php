@@ -5,8 +5,8 @@ namespace Craft;
 /**
  * Translate Element Type.
  *
- * @author    Bob Olde Hampsink <b.oldehampsink@itmundi.nl>
- * @copyright Copyright (c) 2015, Bob Olde Hampsink
+ * @author    Bob Olde Hampsink <b.oldehampsink@nerds.company>
+ * @copyright Copyright (c) 2016, Bob Olde Hampsink
  * @license   MIT
  *
  * @link      http://github.com/boboldehampsink
@@ -51,34 +51,34 @@ class TranslateElementType extends BaseElementType
     public function getStatuses()
     {
         return array(
-            TranslateModel::DONE    => Craft::t('Done'),
+            TranslateModel::DONE => Craft::t('Done'),
             TranslateModel::PENDING => Craft::t('Pending'),
         );
     }
 
     /**
-     * Define table column names.
+     * Define available table column names.
+     *
+     * @return array
+     */
+    public function defineAvailableTableAttributes()
+    {
+        return array(
+            array('original' => array('label' => Craft::t('Original'))),
+            array('field' => array('label' => Craft::t('Translation'))),
+        );
+    }
+
+    /**
+     * Returns the default table attributes.
      *
      * @param string $source
      *
      * @return array
      */
-    public function defineTableAttributes($source = null)
+    public function getDefaultTableAttributes($source = null)
     {
-        return array(
-            array(
-                'original',
-                array(
-                    'label' => Craft::t('Original')
-                ),
-            ),
-            array(
-                'field',
-                array(
-                    'label' => Craft::t('Translation')
-                ),
-            ),
-        );
+        return array('original', 'field');
     }
 
     /**
@@ -90,7 +90,7 @@ class TranslateElementType extends BaseElementType
     {
         $sortableAttributes = array();
 
-        foreach ($this->defineTableAttributes() as $index => $attributeDefinition) {
+        foreach ($this->defineAvailableTableAttributes() as $index => $attributeDefinition) {
             foreach($attributeDefinition as $name => $values) {
                 $sortableAttributes[$attributeDefinition[0]] = $attributeDefinition[1]['label'];
             }
@@ -120,12 +120,12 @@ class TranslateElementType extends BaseElementType
     public function defineCriteriaAttributes()
     {
         return array(
-            'original'    => AttributeType::String,
+            'original' => AttributeType::String,
             'translation' => AttributeType::String,
-            'source'      => AttributeType::String,
-            'file'        => AttributeType::String,
-            'status'      => array(AttributeType::String, 'default' => TranslateModel::DONE),
-            'locale'      => array(AttributeType::String, 'default' => 'en_us'),
+            'source' => AttributeType::String,
+            'file' => AttributeType::String,
+            'status' => array(AttributeType::String, 'default' => TranslateModel::DONE),
+            'locale' => array(AttributeType::String, 'default' => 'en_us'),
         );
     }
 
@@ -199,8 +199,8 @@ class TranslateElementType extends BaseElementType
         // Get default sources
         $sources = array(
             '*' => array(
-                'label'      => Craft::t('All translations'),
-                'criteria'   => array(
+                'label' => Craft::t('All translations'),
+                'criteria' => array(
                     'source' => array(
                         craft()->path->getPluginsPath(),
                         craft()->path->getSiteTemplatesPath(),
@@ -209,15 +209,15 @@ class TranslateElementType extends BaseElementType
             ),
             array('heading' => Craft::t('Default')),
             'plugins' => array(
-                'label'      => Craft::t('Plugins'),
-                'criteria'   => array(
+                'label' => Craft::t('Plugins'),
+                'criteria' => array(
                     'source' => craft()->path->getPluginsPath(),
                 ),
                 'nested' => $pluginSources,
             ),
             'templates' => array(
-                'label'      => Craft::t('Templates'),
-                'criteria'   => array(
+                'label' => Craft::t('Templates'),
+                'criteria' => array(
                     'source' => craft()->path->getSiteTemplatesPath(),
                 ),
                 'nested' => $templateSources,
@@ -260,13 +260,13 @@ class TranslateElementType extends BaseElementType
     public function getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes)
     {
         $variables = array(
-            'viewMode'            => $viewState['mode'],
-            'context'             => $context,
-            'elementType'         => new ElementTypeVariable($this),
-            'disabledElementIds'  => $disabledElementIds,
-            'attributes'          => $this->defineTableAttributes($sourceKey),
-            'elements'            => craft()->translate->get($criteria, $viewState),
-            'showCheckboxes'      => $showCheckboxes,
+            'viewMode' => $viewState['mode'],
+            'context' => $context,
+            'elementType' => new ElementTypeVariable($this),
+            'disabledElementIds' => $disabledElementIds,
+            'attributes' => $this->getTableAttributesForSource($sourceKey),
+            'elements' => craft()->translate->get($criteria, $viewState),
+            'showCheckboxes' => $showCheckboxes,
         );
 
         // Inject some custom js also
